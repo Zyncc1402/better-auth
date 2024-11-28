@@ -4,8 +4,17 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
+import { headers } from "next/headers";
+import Googlebtn from "../signin/googlebtn";
+import Githubbtn from "../signin/githubbtn";
 
-const Page = () => {
+const Page = async () => {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  if (session) {
+    redirect("/protected");
+  }
   return (
     <div
       className={
@@ -44,6 +53,10 @@ const Page = () => {
         />
         <Button type={"submit"}>Sign up</Button>
       </form>
+      <div className="w-[30%] flex flex-col gap-y-3">
+        <Googlebtn />
+        <Githubbtn />
+      </div>
       <h1>
         Already have an account?<Link href="/signin"> Sign in</Link>
       </h1>
