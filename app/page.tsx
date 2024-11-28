@@ -7,13 +7,13 @@ export default async function Page() {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
-  const res = await fetch("http://localhost:3000/api/test", {
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${session?.session.token}`,
-    }
-  })
-  console.log(await res.json());
+  // const res = await fetch("http://localhost:3000/api/test", {
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //     "Authorization": `Bearer ${session?.session.token}`,
+  //   }
+  // })
+  // console.log(await res.json());
   return (
     <div className="h-screen gap-5 w-full flex items-center justify-center font-medium text-xl">
       {session ? (
