@@ -7,12 +7,21 @@ export default async function Page() {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
+  const res = await fetch("http://localhost:3000/api/test", {
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${session?.session.token}`,
+    }
+  })
+  console.log(await res.json());
   return (
     <div className="h-screen gap-5 w-full flex items-center justify-center font-medium text-xl">
       {session ? (
         <div className="flex flex-col gap-y-2">
+          <h1 className="text-2xl font-medium">ID: {session.user.id}</h1>
           <h1 className="text-2xl font-medium">Name: {session.user.name}</h1>
           <h1 className="text-2xl font-medium">Email: {session.user.email}</h1>
+          <h1 className="text-2xl font-medium">Token: {session.session.token}</h1>
         </div>
       ) : (
         <h1>Not logged in</h1>
