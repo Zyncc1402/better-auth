@@ -7,13 +7,14 @@ import Googlebtn from "./googlebtn";
 import Githubbtn from "./githubbtn";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { APIError } from "better-auth/api";
 
 const Page = async () => {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
   if (session) {
-    redirect("/protected");
+    redirect("/");
   }
   return (
     <div
@@ -26,12 +27,18 @@ const Page = async () => {
           "use server";
           const email = formData.get("email") as string;
           const password = formData.get("password") as string;
-          await auth.api.signInEmail({
-            body: {
-              email,
-              password,
-            },
-          });
+          try {
+            await auth.api.signInEmail({
+              body: {
+                email,
+                password,
+              },
+            });
+          } catch (error) {
+            if (error instanceof APIError) {
+              console.log(error.message, error.status)
+            }
+          }
         }}
         className={"flex flex-col gap-5 w-[30%]"}
       >
