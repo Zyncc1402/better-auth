@@ -17,9 +17,11 @@ const Navbar = async () => {
       <Link href="/">
         <h1 className={"text-xl font-semibold"}>better auth</h1>
       </Link>
-      <div className={"flex gap-x-3 items-center"}>
-        <Link href="/onetap">Google One Tap</Link>
-        <Link href="/protected">Protected</Link>
+      <div className={"flex gap-x-10 items-center"}>
+        <Link href="/onetap">Google</Link>
+        <Link href="/server">Server</Link>
+        <Link href="/client">Client</Link>
+        <Link href="/admin">Admin</Link>
         {session ? (
           <form
             action={async () => {

@@ -8,6 +8,7 @@ const Page = () => {
   useEffect(() => {
     async function GoogleOneTap() {
       await authClient.oneTap({
+        cancelOnTapOutside: false,
         fetchOptions: {
           onSuccess: () => {
             redirect("/protected");

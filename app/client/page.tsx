@@ -1,12 +1,10 @@
-import React from "react";
-import { headers } from "next/headers";
-import { auth } from "@/auth";
+"use client";
+
+import { authClient } from "@/lib/auth-client";
 import Image from "next/image";
 
-export default async function Page() {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+export default function AuthButtons() {
+  const { data: session } = authClient.useSession();
   return (
     <div className="h-screen gap-5 w-full flex items-center justify-center font-medium text-xl">
       {session ? (

@@ -5,15 +5,13 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { headers } from "next/headers";
-import Googlebtn from "../signin/googlebtn";
-import Githubbtn from "../signin/githubbtn";
 
 const Page = async () => {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
   if (session) {
-    redirect("/protected");
+    redirect("/");
   }
   return (
     <div
@@ -33,13 +31,11 @@ const Page = async () => {
               email,
               password,
             },
-            fetchOptions: {
-              onSuccess: () => {
-                redirect("/signin");
-              },
-            },
+            asResponse: true,
           });
-          console.log("Created User ", data);
+          if (data.status == 200) {
+            redirect("/");
+          }
         }}
         className={"flex flex-col gap-5 w-[30%]"}
       >
@@ -54,8 +50,42 @@ const Page = async () => {
         <Button type={"submit"}>Sign up</Button>
       </form>
       <div className="w-[30%] flex flex-col gap-y-3">
-        <Googlebtn />
-        <Githubbtn />
+        <form
+          action={async () => {
+            "use server";
+            const res = await auth.api.signInSocial({
+              body: {
+                provider: "google",
+                fetchOptions: {
+                  onSuccess: () => redirect("/"),
+                },
+              },
+            });
+            redirect(res.url);
+          }}
+        >
+          <Button type="submit" className="w-full" variant={"secondary"}>
+            Sign up with Google
+          </Button>
+        </form>
+        <form
+          action={async () => {
+            "use server";
+            const res = await auth.api.signInSocial({
+              body: {
+                provider: "github",
+                fetchOptions: {
+                  onSuccess: () => redirect("/"),
+                },
+              },
+            });
+            redirect(res.url);
+          }}
+        >
+          <Button type="submit" className="w-full" variant={"secondary"}>
+            Sign up with Github
+          </Button>
+        </form>
       </div>
       <h1>
         Already have an account?<Link href="/signin"> Sign in</Link>

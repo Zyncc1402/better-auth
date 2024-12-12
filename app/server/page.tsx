@@ -1,7 +1,7 @@
-import React from "react";
-import { headers } from "next/headers";
 import { auth } from "@/auth";
+import { headers } from "next/headers";
 import Image from "next/image";
+import React from "react";
 
 export default async function Page() {
   const session = await auth.api.getSession({
