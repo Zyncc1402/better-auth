@@ -2,7 +2,10 @@ import { createAuthClient } from "better-auth/react";
 import { adminClient, oneTapClient } from "better-auth/client/plugins";
 
 export const authClient = createAuthClient({
-  baseURL: "http://localhost:3000",
+  baseURL:
+    process.env.NODE_ENV == "development"
+      ? "http://localhost:3000"
+      : "https://better-auth-zync.vercel.app/",
   plugins: [
     oneTapClient({
       clientId:
