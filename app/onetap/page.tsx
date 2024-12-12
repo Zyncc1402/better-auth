@@ -11,7 +11,7 @@ const Page = () => {
         cancelOnTapOutside: false,
         fetchOptions: {
           onSuccess: () => {
-            redirect("/protected");
+            redirect("/");
           },
         },
       });
