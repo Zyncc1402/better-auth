@@ -1,13 +1,13 @@
 "use client";
 
-import { authClient } from "@/lib/auth-client";
+import { oneTap } from "@/lib/auth-client";
 import { redirect } from "next/navigation";
 import React, { useEffect } from "react";
 
 const Page = () => {
   useEffect(() => {
     async function GoogleOneTap() {
-      await authClient.oneTap({
+      await oneTap({
         cancelOnTapOutside: false,
         fetchOptions: {
           onSuccess: () => {

@@ -1,10 +1,10 @@
 "use client";
 
-import { authClient } from "@/lib/auth-client";
+import { useSession } from "@/lib/auth-client";
 import Image from "next/image";
 
 export default function AuthButtons() {
-  const { data: session } = authClient.useSession();
+  const { data: session } = useSession();
   return (
     <div className="h-screen gap-5 w-full flex items-center justify-center font-medium text-xl">
       {session ? (

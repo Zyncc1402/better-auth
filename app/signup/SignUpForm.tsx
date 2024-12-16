@@ -1,33 +1,25 @@
 "use client";
 
-import React, { useState } from "react";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { redirect } from "next/navigation";
-import { signIn, useSession } from "@/lib/auth-client";
+import { Input } from "@/components/ui/input";
+import { signIn, signUp } from "@/lib/auth-client";
+import { useState } from "react";
 import { toast } from "sonner";
 import { LuLoaderCircle } from "react-icons/lu";
+import { useRouter } from "next/navigation";
 
-const Page = () => {
+export default function SignUpForm() {
   const [loading, setLoading] = useState(false);
-  const [loadingGoogle, setLoadingGoogle] = useState(false);
-  const [loadingGithub, setLoadingGithub] = useState(false);
-  const { data: session } = useSession();
-  if (session) {
-    redirect("/");
-  }
+  const router = useRouter();
   return (
-    <div
-      className={
-        "h-screen w-full flex items-center justify-center flex-col gap-y-5"
-      }
-    >
+    <>
       <form
         action={async (formData) => {
+          const name = formData.get("name") as string;
           const email = formData.get("email") as string;
           const password = formData.get("password") as string;
-          await signIn.email({
+          await signUp.email({
+            name,
             email,
             password,
             callbackURL: "/dashboard",
@@ -41,11 +33,15 @@ const Page = () => {
               onError: (ctx) => {
                 toast.error(ctx.error.message);
               },
+              onSuccess: async () => {
+                router.push("/dashboard");
+              },
             },
           });
         }}
         className={"flex flex-col gap-5 w-[30%]"}
       >
+        <Input placeholder="Name" type={"text"} name="name" required />
         <Input placeholder="Email" type={"email"} name="email" required />
         <Input
           placeholder="Password"
@@ -53,8 +49,8 @@ const Page = () => {
           name="password"
           required
         />
-        <Button type={"submit"} disabled={loading}>
-          {loading ? <LuLoaderCircle className="animate-spin" /> : "Sign in"}
+        <Button type={"submit"}>
+          {loading ? <LuLoaderCircle className="animate-spin" /> : "Sign Up"}
         </Button>
       </form>
       <div className="w-[30%] flex flex-col gap-y-3">
@@ -64,30 +60,18 @@ const Page = () => {
               provider: "google",
               callbackURL: "/dashboard",
               fetchOptions: {
-                onResponse: () => {
-                  setLoadingGoogle(false);
-                },
-                onRequest: () => {
-                  setLoadingGoogle(true);
-                },
                 onError: (ctx) => {
                   toast.error(ctx.error.message);
+                },
+                onSuccess: async () => {
+                  toast.success("Logged In");
                 },
               },
             });
           }}
         >
-          <Button
-            type="submit"
-            className="w-full"
-            disabled={loadingGoogle}
-            variant={"secondary"}
-          >
-            {loadingGoogle ? (
-              <LuLoaderCircle className="animate-spin" />
-            ) : (
-              "Sign in with Google"
-            )}
+          <Button type="submit" className="w-full" variant={"secondary"}>
+            Sign up with Google
           </Button>
         </form>
         <form
@@ -96,38 +80,21 @@ const Page = () => {
               provider: "github",
               callbackURL: "/dashboard",
               fetchOptions: {
-                onResponse: () => {
-                  setLoadingGithub(false);
-                },
-                onRequest: () => {
-                  setLoadingGithub(true);
-                },
                 onError: (ctx) => {
                   toast.error(ctx.error.message);
+                },
+                onSuccess: async () => {
+                  toast.success("Logged In");
                 },
               },
             });
           }}
         >
-          <Button
-            type="submit"
-            className="w-full"
-            variant={"secondary"}
-            disabled={loadingGithub}
-          >
-            {loadingGithub ? (
-              <LuLoaderCircle className="animate-spin" />
-            ) : (
-              "Sign in with GitHub"
-            )}
+          <Button type="submit" className="w-full" variant={"secondary"}>
+            Sign up with Github
           </Button>
         </form>
       </div>
-      <h1>
-        Dont have an account?<Link href="/signup"> Sign up</Link>
-      </h1>
-    </div>
+    </>
   );
-};
-
-export default Page;
+}

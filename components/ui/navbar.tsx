@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { auth } from "@/auth";
 import { headers } from "next/headers";
+import SignOutButton from "@/components/signOutButton";
 
 const Navbar = async () => {
   const session = await auth.api.getSession({
@@ -11,7 +12,7 @@ const Navbar = async () => {
   return (
     <header
       className={
-        "w-full absolute top-0 left-0 right-0 flex justify-between py-3 container mx-auto"
+        "w-full absolute top-0 left-0 right-0 flex items-center justify-between py-3 container mx-auto"
       }
     >
       <Link href="/">
@@ -19,22 +20,11 @@ const Navbar = async () => {
       </Link>
       <div className={"flex gap-x-10 items-center"}>
         <Link href="/onetap">Google</Link>
-        <Link href="/server">Server</Link>
+        <Link href="/dashboard">Dashboard</Link>
         <Link href="/client">Client</Link>
         <Link href="/admin">Admin</Link>
         {session ? (
-          <form
-            action={async () => {
-              "use server";
-              await auth.api.signOut({
-                headers: await headers(),
-              });
-            }}
-          >
-            <Button type={"submit"} variant={"secondary"}>
-              Sign out
-            </Button>
-          </form>
+          <SignOutButton />
         ) : (
           <Link href="/signin">
             <Button variant={"secondary"} type={"button"}>
